@@ -203,7 +203,7 @@ export async function runMonitor({
   const jobs = await fetchJobs(fetchImpl);
   const seen = new Set(previous.seen);
   const unseen = jobs.filter((job) => !seen.has(job.id));
-  const newJobs = previous.initialized || alertCurrent ? unseen : [];
+  const newJobs = alertCurrent ? jobs : previous.initialized ? unseen : [];
 
   for (const job of jobs) seen.add(job.id);
   const nextState = {

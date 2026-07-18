@@ -105,6 +105,27 @@ test("alert includes direct links and requisition IDs", () => {
   assert.match(alert, /Requisition: 12345/);
 });
 
+test("manual alert sends current jobs even after initialization", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "providence-manual-alert-"));
+  const statePath = join(directory, "seen.json");
+  const alertPath = join(directory, "alert.md");
+
+  try {
+    await writeFile(statePath, '{"initialized":true,"seen":["JOB-1","JOB-2"]}\n');
+    const result = await runMonitor({
+      statePath,
+      alertPath,
+      alertCurrent: true,
+      fetchImpl: async () => responseFor(rawJobs),
+    });
+
+    assert.equal(result.newJobs.length, 2);
+    assert.match(await readFile(alertPath, "utf8"), /2 new Providence/);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
 test("README listings show current jobs and remain stable", async () => {
   const directory = await mkdtemp(join(tmpdir(), "providence-readme-"));
   const statePath = join(directory, "seen.json");
