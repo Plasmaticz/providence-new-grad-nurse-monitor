@@ -57,6 +57,13 @@ jobs:
           "$RUNNER_TEMP/new_jobs.md"
           "${{ steps.monitor.outputs.new_count }}"
 
+      - name: Send Discord notification
+        if: steps.monitor.outputs.new_count != '0'
+        continue-on-error: true
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: node scripts/send-discord.mjs "$RUNNER_TEMP/new_jobs.md"
+
       - name: Save current listings and seen job IDs
         if: steps.monitor.outputs.repo_changed == 'true'
         run: |

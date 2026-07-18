@@ -11,6 +11,10 @@ import {
   runMonitor,
   slugify,
 } from "../scripts/check-jobs.mjs";
+import {
+  sendDiscordAlert,
+  splitDiscordMessage,
+} from "../scripts/send-discord.mjs";
 
 const rawJobs = [
   {
@@ -136,4 +140,28 @@ test("README listings show current jobs and remain stable", async () => {
 
 test("empty listings section renders a useful repository message", () => {
   assert.match(buildListingsSection([]), /No matching openings/);
+});
+
+test("Discord alerts stay within the message limit", () => {
+  const chunks = splitDiscordMessage(`New jobs\n${"x".repeat(4000)}`);
+  assert.ok(chunks.length > 1);
+  assert.ok(chunks.every((chunk) => chunk.length <= 1900));
+});
+
+test("Discord sender disables mentions and requests confirmation", async () => {
+  const requests = [];
+  await sendDiscordAlert(
+    "https://discord.com/api/webhooks/example/token",
+    "A new RN Resident job is open",
+    async (url, options) => {
+      requests.push({ url: String(url), options });
+      return { ok: true };
+    },
+  );
+
+  assert.equal(requests.length, 1);
+  assert.match(requests[0].url, /wait=true/);
+  const payload = JSON.parse(requests[0].options.body);
+  assert.deepEqual(payload.allowed_mentions, { parse: [] });
+  assert.match(payload.content, /RN Resident/);
 });
