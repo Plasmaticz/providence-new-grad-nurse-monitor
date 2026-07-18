@@ -1,5 +1,9 @@
 # Providence New-Grad Nurse Job Monitor
 
+[![Providence job monitor status](https://github.com/Plasmaticz/providence-new-grad-nurse-monitor/actions/workflows/check-jobs.yml/badge.svg)](https://github.com/Plasmaticz/providence-new-grad-nurse-monitor/actions/workflows/check-jobs.yml)
+
+**Live schedule:** Every five minutes
+
 This repository checks Providence's official **RN Resident & Graduate** campaign every five minutes. It tracks `RN Resident` and `Graduate Nurse` openings and creates a GitHub Issue only when a new job ID appears.
 
 The monitor runs entirely on GitHub Actions. Your computer does not need to be on, and no email password or paid email service is required.
