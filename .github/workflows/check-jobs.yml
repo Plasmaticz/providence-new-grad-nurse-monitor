@@ -45,6 +45,7 @@ jobs:
           node scripts/check-jobs.mjs \
             --state data/seen_jobs.json \
             --alert-file "$RUNNER_TEMP/new_jobs.md" \
+            --new-jobs-file "$RUNNER_TEMP/new_jobs.json" \
             --readme README.md \
             $extra_args
 
@@ -62,7 +63,7 @@ jobs:
         continue-on-error: true
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: node scripts/send-discord.mjs "$RUNNER_TEMP/new_jobs.md"
+        run: node scripts/send-discord.mjs new "$RUNNER_TEMP/new_jobs.json"
 
       - name: Save current listings and seen job IDs
         if: steps.monitor.outputs.repo_changed == 'true'

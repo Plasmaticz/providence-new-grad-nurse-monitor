@@ -194,6 +194,7 @@ async function setActionsOutputs(values, outputPath) {
 export async function runMonitor({
   statePath,
   alertPath,
+  newJobsPath,
   readmePath,
   actionsOutputPath,
   alertCurrent = false,
@@ -223,6 +224,10 @@ export async function runMonitor({
   if (newJobs.length > 0) {
     await mkdir(dirname(alertPath), { recursive: true });
     await writeFile(alertPath, buildAlert(newJobs), "utf8");
+    if (newJobsPath) {
+      await mkdir(dirname(newJobsPath), { recursive: true });
+      await writeFile(newJobsPath, `${JSON.stringify(newJobs, null, 2)}\n`, "utf8");
+    }
   }
 
   await setActionsOutputs(
@@ -250,6 +255,7 @@ function parseArgs(args) {
   const options = {
     statePath: "data/seen_jobs.json",
     alertPath: "new_jobs.md",
+    newJobsPath: undefined,
     readmePath: "README.md",
     actionsOutputPath: process.env.GITHUB_OUTPUT,
     alertCurrent: false,
@@ -260,6 +266,7 @@ function parseArgs(args) {
     if (arg === "--alert-current") options.alertCurrent = true;
     else if (arg === "--state") options.statePath = args[++index];
     else if (arg === "--alert-file") options.alertPath = args[++index];
+    else if (arg === "--new-jobs-file") options.newJobsPath = args[++index];
     else if (arg === "--readme") options.readmePath = args[++index];
     else if (arg === "--output") options.actionsOutputPath = args[++index];
     else throw new Error(`Unknown argument: ${arg}`);
@@ -267,6 +274,7 @@ function parseArgs(args) {
 
   options.statePath = resolve(options.statePath);
   options.alertPath = resolve(options.alertPath);
+  if (options.newJobsPath) options.newJobsPath = resolve(options.newJobsPath);
   options.readmePath = resolve(options.readmePath);
   return options;
 }

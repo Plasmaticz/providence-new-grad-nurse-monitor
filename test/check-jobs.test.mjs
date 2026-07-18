@@ -12,8 +12,9 @@ import {
   slugify,
 } from "../scripts/check-jobs.mjs";
 import {
-  sendDiscordAlert,
-  splitDiscordMessage,
+  buildDailyDigestPayloads,
+  buildNewRolePayloads,
+  sendDiscordJobs,
 } from "../scripts/send-discord.mjs";
 
 const rawJobs = [
@@ -109,18 +110,21 @@ test("manual alert sends current jobs even after initialization", async () => {
   const directory = await mkdtemp(join(tmpdir(), "providence-manual-alert-"));
   const statePath = join(directory, "seen.json");
   const alertPath = join(directory, "alert.md");
+  const newJobsPath = join(directory, "new-jobs.json");
 
   try {
     await writeFile(statePath, '{"initialized":true,"seen":["JOB-1","JOB-2"]}\n');
     const result = await runMonitor({
       statePath,
       alertPath,
+      newJobsPath,
       alertCurrent: true,
       fetchImpl: async () => responseFor(rawJobs),
     });
 
     assert.equal(result.newJobs.length, 2);
     assert.match(await readFile(alertPath, "utf8"), /2 new Providence/);
+    assert.equal(JSON.parse(await readFile(newJobsPath, "utf8")).length, 2);
   } finally {
     await rm(directory, { recursive: true, force: true });
   }
@@ -163,17 +167,38 @@ test("empty listings section renders a useful repository message", () => {
   assert.match(buildListingsSection([]), /No matching openings/);
 });
 
-test("Discord alerts stay within the message limit", () => {
-  const chunks = splitDiscordMessage(`New jobs\n${"x".repeat(4000)}`);
-  assert.ok(chunks.length > 1);
-  assert.ok(chunks.every((chunk) => chunk.length <= 1900));
+test("new Discord role alerts use an embed and notify everyone", () => {
+  const jobs = normalizeJobs([{ featured_jobs: [], jobs: [rawJobs[0]] }]);
+  const [payload] = buildNewRolePayloads(jobs);
+
+  assert.match(payload.content, /\*\*NEW ROLE\*\*/);
+  assert.match(payload.content, /@everyone/);
+  assert.deepEqual(payload.allowed_mentions, { parse: ["everyone"] });
+  assert.equal(payload.embeds[0].title, "RN Resident - Acute Care");
+  assert.match(payload.embeds[0].url, /providence\.jobs/);
+  assert.equal(payload.embeds[0].fields[0].value, "Richland, WA");
 });
 
-test("Discord sender disables mentions and requests confirmation", async () => {
+test("daily Discord digest groups embeds and disables mentions", () => {
+  const job = normalizeJobs([{ featured_jobs: [], jobs: [rawJobs[0]] }])[0];
+  const payloads = buildDailyDigestPayloads(
+    Array.from({ length: 9 }, (_, index) => ({ ...job, id: `JOB-${index}` })),
+  );
+
+  assert.equal(payloads.length, 2);
+  assert.equal(payloads[0].embeds.length, 8);
+  assert.equal(payloads[1].embeds.length, 1);
+  assert.deepEqual(payloads[0].allowed_mentions, { parse: [] });
+  assert.match(payloads[0].content, /9 current openings/);
+});
+
+test("Discord sender posts embeds and requests confirmation", async () => {
   const requests = [];
-  await sendDiscordAlert(
+  const jobs = normalizeJobs([{ featured_jobs: [], jobs: [rawJobs[0]] }]);
+  await sendDiscordJobs(
     "https://discord.com/api/webhooks/example/token",
-    "A new RN Resident job is open",
+    jobs,
+    "new",
     async (url, options) => {
       requests.push({ url: String(url), options });
       return { ok: true };
@@ -183,6 +208,6 @@ test("Discord sender disables mentions and requests confirmation", async () => {
   assert.equal(requests.length, 1);
   assert.match(requests[0].url, /wait=true/);
   const payload = JSON.parse(requests[0].options.body);
-  assert.deepEqual(payload.allowed_mentions, { parse: [] });
-  assert.match(payload.content, /RN Resident/);
+  assert.deepEqual(payload.allowed_mentions, { parse: ["everyone"] });
+  assert.equal(payload.embeds[0].title, "RN Resident - Acute Care");
 });
