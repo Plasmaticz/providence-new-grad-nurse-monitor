@@ -134,6 +134,55 @@ export function buildAlert(jobs) {
   ].join("\n");
 }
 
+const LISTINGS_START = "<!-- PROVIDENCE-JOBS:START -->";
+const LISTINGS_END = "<!-- PROVIDENCE-JOBS:END -->";
+
+function escapeTableCell(value) {
+  return String(value).replace(/\|/g, "\\|").replace(/\r?\n/g, " ");
+}
+
+function formatPostedDate(value) {
+  if (!value) return "Not listed";
+  const date = new Date(value);
+  return Number.isNaN(date.valueOf()) ? value : date.toISOString().slice(0, 10);
+}
+
+export function buildListingsSection(jobs) {
+  const noun = jobs.length === 1 ? "opening" : "openings";
+  const rows = jobs.length
+    ? jobs.map(
+        (job) =>
+          `| [${escapeTableCell(job.title)}](${job.url}) | ${escapeTableCell(job.location)} | ${formatPostedDate(job.postedAt)} | ${escapeTableCell(job.requisitionId || "Not listed")} |`,
+      )
+    : ["| No matching openings are currently listed. |  |  |  |"];
+
+  return [
+    LISTINGS_START,
+    `**${jobs.length} current ${noun}**`,
+    "",
+    "| Position | Location | Posted | Requisition |",
+    "| --- | --- | --- | --- |",
+    ...rows,
+    "",
+    `[View the full Providence campaign](${CAMPAIGN_URL})`,
+    LISTINGS_END,
+  ].join("\n");
+}
+
+export async function updateReadme(readmePath, jobs) {
+  if (!readmePath) return false;
+  const current = await readFile(readmePath, "utf8");
+  const section = buildListingsSection(jobs);
+  const pattern = new RegExp(`${LISTINGS_START}[\\s\\S]*?${LISTINGS_END}`);
+  const next = pattern.test(current)
+    ? current.replace(pattern, section)
+    : current.replace("\n## Set up", `\n## Current openings\n\n${section}\n\n## Set up`);
+
+  if (next === current) return false;
+  await writeFile(readmePath, next, "utf8");
+  return true;
+}
+
 async function setActionsOutputs(values, outputPath) {
   if (!outputPath) return;
   const lines = Object.entries(values)
@@ -145,6 +194,7 @@ async function setActionsOutputs(values, outputPath) {
 export async function runMonitor({
   statePath,
   alertPath,
+  readmePath,
   actionsOutputPath,
   alertCurrent = false,
   fetchImpl = fetch,
@@ -163,6 +213,7 @@ export async function runMonitor({
   const stateChanged =
     !previous.initialized ||
     JSON.stringify(nextState.seen) !== JSON.stringify([...previous.seen].sort());
+  const readmeChanged = await updateReadme(readmePath, jobs);
 
   if (stateChanged) {
     await mkdir(dirname(statePath), { recursive: true });
@@ -179,18 +230,27 @@ export async function runMonitor({
       new_count: newJobs.length,
       current_count: jobs.length,
       state_changed: stateChanged,
+      readme_changed: readmeChanged,
+      repo_changed: stateChanged || readmeChanged,
       baseline_created: !previous.initialized && !alertCurrent,
     },
     actionsOutputPath,
   );
 
-  return { jobs, newJobs, stateChanged, baselineCreated: !previous.initialized };
+  return {
+    jobs,
+    newJobs,
+    stateChanged,
+    readmeChanged,
+    baselineCreated: !previous.initialized,
+  };
 }
 
 function parseArgs(args) {
   const options = {
     statePath: "data/seen_jobs.json",
     alertPath: "new_jobs.md",
+    readmePath: "README.md",
     actionsOutputPath: process.env.GITHUB_OUTPUT,
     alertCurrent: false,
   };
@@ -200,12 +260,14 @@ function parseArgs(args) {
     if (arg === "--alert-current") options.alertCurrent = true;
     else if (arg === "--state") options.statePath = args[++index];
     else if (arg === "--alert-file") options.alertPath = args[++index];
+    else if (arg === "--readme") options.readmePath = args[++index];
     else if (arg === "--output") options.actionsOutputPath = args[++index];
     else throw new Error(`Unknown argument: ${arg}`);
   }
 
   options.statePath = resolve(options.statePath);
   options.alertPath = resolve(options.alertPath);
+  options.readmePath = resolve(options.readmePath);
   return options;
 }
 

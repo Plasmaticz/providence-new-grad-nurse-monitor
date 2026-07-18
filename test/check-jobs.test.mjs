@@ -6,6 +6,7 @@ import test from "node:test";
 
 import {
   buildAlert,
+  buildListingsSection,
   normalizeJobs,
   runMonitor,
   slugify,
@@ -98,4 +99,41 @@ test("alert includes direct links and requisition IDs", () => {
   const alert = buildAlert(jobs);
   assert.match(alert, /https:\/\/providence\.jobs\/richland-wa\//);
   assert.match(alert, /Requisition: 12345/);
+});
+
+test("README listings show current jobs and remain stable", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "providence-readme-"));
+  const statePath = join(directory, "seen.json");
+  const alertPath = join(directory, "alert.md");
+  const readmePath = join(directory, "README.md");
+
+  try {
+    await writeFile(statePath, '{"initialized":true,"seen":["JOB-1","JOB-2"]}\n');
+    await writeFile(
+      readmePath,
+      "# Monitor\n\n<!-- PROVIDENCE-JOBS:START -->\nWaiting\n<!-- PROVIDENCE-JOBS:END -->\n",
+    );
+    const options = {
+      statePath,
+      alertPath,
+      readmePath,
+      fetchImpl: async () => responseFor(rawJobs),
+    };
+
+    const update = await runMonitor(options);
+    const readme = await readFile(readmePath, "utf8");
+    assert.equal(update.readmeChanged, true);
+    assert.match(readme, /2 current openings/);
+    assert.match(readme, /Graduate Nurse - Obstetrics/);
+    assert.match(readme, /\| Lubbock, TX \| 2026-07-18 \| 67890 \|/);
+
+    const repeat = await runMonitor(options);
+    assert.equal(repeat.readmeChanged, false);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+test("empty listings section renders a useful repository message", () => {
+  assert.match(buildListingsSection([]), /No matching openings/);
 });
