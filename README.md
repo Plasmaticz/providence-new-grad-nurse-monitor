@@ -5,11 +5,10 @@
 ## Current openings
 
 <!-- PROVIDENCE-JOBS:START -->
-**8 current openings**
+**7 current openings**
 
 | Position | Location | Posted | Requisition |
 | --- | --- | --- | --- |
-| [Graduate Nurse - Obstetrics](https://providence.jobs/lubbock-tx/graduate-nurse-obstetrics/AF0170896B9A4951B660A8DA34B969C9/job/) | Lubbock, TX | 2026-07-17 | 446413 |
 | [RN Resident - Pediatrics Medical Surgical](https://providence.jobs/lubbock-tx/rn-resident-pediatrics-medical-surgical/EC694A3A7DD44C039CDC4030967CD8F0/job/) | Lubbock, TX | 2026-07-16 | 446421 |
 | [RN Resident - Acute Care Unit](https://providence.jobs/richland-wa/rn-resident-acute-care-unit/F63B4519BD5C4AC1BC154E2A29573B69/job/) | Richland, WA | 2026-07-15 | 445057 |
 | [RN Resident - SHMC Multi Specialty](https://providence.jobs/spokane-wa/rn-resident-shmc-multi-specialty/AE79E7017FAF4C2AB3EDACDB9658480F/job/) | Spokane, WA | 2026-07-14 | 445362 |
