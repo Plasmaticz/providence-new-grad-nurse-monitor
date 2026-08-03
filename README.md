@@ -5,11 +5,10 @@
 ## Current openings
 
 <!-- PROVIDENCE-JOBS:START -->
-**5 current openings**
+**4 current openings**
 
 | Position | Location | Posted | Requisition |
 | --- | --- | --- | --- |
-| [RN Resident - Surgical Oncology](https://providence.jobs/portland-or/rn-resident-surgical-oncology/2C111CC57A3944B6B917A7EE131B4B89/job/) | Portland, OR | 2026-08-03 | 449750 |
 | [RN Resident - Cardiac Transplant](https://providence.jobs/spokane-wa/rn-resident-cardiac-transplant/BACD7E7580D64A248264FA6CB590CE60/job/) | Spokane, WA | 2026-08-03 | 449812 |
 | [RN Resident - Cardiac Acute Care](https://providence.jobs/richland-wa/rn-resident-cardiac-acute-care/4CCD3EF891464F61ABC6D8B03B2D68C2/job/) | Richland, WA | 2026-07-31 | 448861 |
 | [RN, RN Fellow, and RN Resident - Multispecialty *Hiring Event, August 13, Spokane*](https://providence.jobs/spokane-wa/rn-rn-fellow-and-rn-resident-multispecialty-hiring-event-august-13-spokane/F6BB5A54FDF643BDA51FED20BEE74D15/job/) | Spokane, WA | 2026-07-30 | 448826 |
