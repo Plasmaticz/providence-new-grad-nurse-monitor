@@ -5,11 +5,10 @@
 ## Current openings
 
 <!-- PROVIDENCE-JOBS:START -->
-**4 current openings**
+**3 current openings**
 
 | Position | Location | Posted | Requisition |
 | --- | --- | --- | --- |
-| [RN Resident - Medical Oncology](https://providence.jobs/spokane-wa/rn-resident-medical-oncology/2BFEF365C02540A483C5F9A4E88733E7/job/) | Spokane, WA | 2026-08-06 | 451039 |
 | [RN Resident - Cardiac Acute Care](https://providence.jobs/richland-wa/rn-resident-cardiac-acute-care/4CCD3EF891464F61ABC6D8B03B2D68C2/job/) | Richland, WA | 2026-07-31 | 448861 |
 | [RN, RN Fellow, and RN Resident - Multispecialty *Hiring Event, August 13, Spokane*](https://providence.jobs/spokane-wa/rn-rn-fellow-and-rn-resident-multispecialty-hiring-event-august-13-spokane/F6BB5A54FDF643BDA51FED20BEE74D15/job/) | Spokane, WA | 2026-07-30 | 448826 |
 | [RN Resident Med Surg](https://providence.jobs/walla-walla-wa/rn-resident-med-surg/A63006E0232647B196338B1A5375D479/job/) | Walla Walla, WA | 2026-06-29 | 441084 |
