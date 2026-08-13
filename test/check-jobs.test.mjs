@@ -202,6 +202,15 @@ test("daily Discord digest groups embeds and disables mentions", () => {
   assert.match(payloads[0].content, /9 current openings/);
 });
 
+test("empty daily Discord digest sends a no-roles embed", () => {
+  const [payload] = buildDailyDigestPayloads([]);
+
+  assert.match(payload.content, /Current Providence Portland/);
+  assert.equal(payload.embeds.length, 1);
+  assert.equal(payload.embeds[0].title, "No roles available :( Come back tomorrow");
+  assert.deepEqual(payload.allowed_mentions, { parse: [] });
+});
+
 test("Discord sender posts embeds and requests confirmation", async () => {
   const requests = [];
   const jobs = normalizeJobs([{ featured_jobs: [], jobs: [rawJobs[0]] }]);

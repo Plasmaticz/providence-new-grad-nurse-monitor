@@ -50,8 +50,15 @@ export function buildDailyDigestPayloads(jobs) {
   if (jobs.length === 0) {
     return [
       {
-        content:
-          "# Current Providence Portland New-Grad Roles\nNo matching openings are currently listed.",
+        content: "# Current Providence Portland New-Grad Roles",
+        embeds: [
+          {
+            title: "No roles available :( Come back tomorrow",
+            description: "No matching Portland openings are currently listed.",
+            color: DAILY_DIGEST_COLOR,
+            footer: { text: "Providence New-Grad Nurse Monitor" },
+          },
+        ],
         allowed_mentions: { parse: [] },
       },
     ];
