@@ -23,7 +23,7 @@ const rawJobs = [
     reqid: "12345",
     title_exact: "RN Resident - Acute Care",
     title_slug: "rn-resident-acute-care",
-    location_exact: "Richland, WA",
+    location_exact: "Portland, OR",
     date_new: "2026-07-17T10:00:00Z",
   },
   {
@@ -32,6 +32,14 @@ const rawJobs = [
     title_exact: "Graduate Nurse - Obstetrics",
     title_slug: "graduate-nurse-obstetrics",
     location_exact: "Lubbock, TX",
+    date_new: "2026-07-18T10:00:00Z",
+  },
+  {
+    guid: "JOB-3",
+    reqid: "24680",
+    title_exact: "Graduate Nurse - Medical Surgical",
+    title_slug: "graduate-nurse-medical-surgical",
+    location_exact: "Portland, OR",
     date_new: "2026-07-18T10:00:00Z",
   },
 ];
@@ -52,7 +60,7 @@ test("slugify matches Providence job URL slugs", () => {
   assert.equal(slugify("Coeur d'Alene, ID"), "coeur-d-alene-id");
 });
 
-test("normalizeJobs keeps new-grad titles and removes duplicates", () => {
+test("normalizeJobs keeps Portland new-grad titles and removes duplicates", () => {
   const jobs = normalizeJobs([
     {
       featured_jobs: [rawJobs[0]],
@@ -60,8 +68,8 @@ test("normalizeJobs keeps new-grad titles and removes duplicates", () => {
     },
   ]);
 
-  assert.deepEqual(jobs.map((job) => job.id), ["JOB-2", "JOB-1"]);
-  assert.match(jobs[0].url, /graduate-nurse-obstetrics\/JOB-2\/job\/$/);
+  assert.deepEqual(jobs.map((job) => job.id), ["JOB-3", "JOB-1"]);
+  assert.match(jobs[0].url, /portland-or\/graduate-nurse-medical-surgical\/JOB-3\/job\/$/);
 });
 
 test("first run creates a quiet baseline and later runs alert once", async () => {
@@ -82,15 +90,15 @@ test("first run creates a quiet baseline and later runs alert once", async () =>
     const update = await runMonitor({
       statePath,
       alertPath,
-      fetchImpl: async () => responseFor(rawJobs),
+      fetchImpl: async () => responseFor([rawJobs[0], rawJobs[1], rawJobs[2]]),
     });
-    assert.deepEqual(update.newJobs.map((job) => job.id), ["JOB-2"]);
-    assert.match(await readFile(alertPath, "utf8"), /Graduate Nurse - Obstetrics/);
+    assert.deepEqual(update.newJobs.map((job) => job.id), ["JOB-3"]);
+    assert.match(await readFile(alertPath, "utf8"), /Graduate Nurse - Medical Surgical/);
 
     const repeat = await runMonitor({
       statePath,
       alertPath,
-      fetchImpl: async () => responseFor(rawJobs),
+      fetchImpl: async () => responseFor([rawJobs[0], rawJobs[1], rawJobs[2]]),
     });
     assert.equal(repeat.newJobs.length, 0);
     assert.equal(repeat.stateChanged, false);
@@ -102,8 +110,9 @@ test("first run creates a quiet baseline and later runs alert once", async () =>
 test("alert includes direct links and requisition IDs", () => {
   const jobs = normalizeJobs([{ featured_jobs: [], jobs: [rawJobs[0]] }]);
   const alert = buildAlert(jobs);
-  assert.match(alert, /https:\/\/providence\.jobs\/richland-wa\//);
+  assert.match(alert, /https:\/\/providence\.jobs\/portland-or\//);
   assert.match(alert, /Requisition: 12345/);
+  assert.match(alert, /Portland/);
 });
 
 test("manual alert sends current jobs even after initialization", async () => {
@@ -113,7 +122,7 @@ test("manual alert sends current jobs even after initialization", async () => {
   const newJobsPath = join(directory, "new-jobs.json");
 
   try {
-    await writeFile(statePath, '{"initialized":true,"seen":["JOB-1","JOB-2"]}\n');
+    await writeFile(statePath, '{"initialized":true,"seen":["JOB-1","JOB-2","JOB-3"]}\n');
     const result = await runMonitor({
       statePath,
       alertPath,
@@ -137,7 +146,7 @@ test("README listings show current jobs and remain stable", async () => {
   const readmePath = join(directory, "README.md");
 
   try {
-    await writeFile(statePath, '{"initialized":true,"seen":["JOB-1","JOB-2"]}\n');
+    await writeFile(statePath, '{"initialized":true,"seen":["JOB-1","JOB-2","JOB-3"]}\n');
     await writeFile(
       readmePath,
       "# Monitor\n\n<!-- PROVIDENCE-JOBS:START -->\nWaiting\n<!-- PROVIDENCE-JOBS:END -->\n",
@@ -153,8 +162,9 @@ test("README listings show current jobs and remain stable", async () => {
     const readme = await readFile(readmePath, "utf8");
     assert.equal(update.readmeChanged, true);
     assert.match(readme, /2 current openings/);
-    assert.match(readme, /Graduate Nurse - Obstetrics/);
-    assert.match(readme, /\| Lubbock, TX \| 2026-07-18 \| 67890 \|/);
+    assert.match(readme, /Graduate Nurse - Medical Surgical/);
+    assert.doesNotMatch(readme, /Lubbock/);
+    assert.match(readme, /\| Portland, OR \| 2026-07-18 \| 24680 \|/);
 
     const repeat = await runMonitor(options);
     assert.equal(repeat.readmeChanged, false);
@@ -176,7 +186,7 @@ test("new Discord role alerts use an embed and notify everyone", () => {
   assert.deepEqual(payload.allowed_mentions, { parse: ["everyone"] });
   assert.equal(payload.embeds[0].title, "RN Resident - Acute Care");
   assert.match(payload.embeds[0].url, /providence\.jobs/);
-  assert.equal(payload.embeds[0].fields[0].value, "Richland, WA");
+  assert.equal(payload.embeds[0].fields[0].value, "Portland, OR");
 });
 
 test("daily Discord digest groups embeds and disables mentions", () => {

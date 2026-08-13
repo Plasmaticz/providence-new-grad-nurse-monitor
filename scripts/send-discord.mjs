@@ -22,8 +22,8 @@ export function buildJobEmbed(job, { isNew = false } = {}) {
     title: clean(job.title, "Providence nursing role", 256),
     url: job.url,
     description: isNew
-      ? "A new Providence new-grad nursing opportunity was just posted."
-      : "Providence RN Resident & Graduate opening",
+      ? "A new Providence Portland new-grad nursing opportunity was just posted."
+      : "Providence Portland RN Resident & Graduate opening",
     color: isNew ? NEW_ROLE_COLOR : DAILY_DIGEST_COLOR,
     fields: [
       { name: "Location", value: clean(job.location), inline: true },
@@ -50,7 +50,8 @@ export function buildDailyDigestPayloads(jobs) {
   if (jobs.length === 0) {
     return [
       {
-        content: "# Current Providence New-Grad Roles\nNo matching openings are currently listed.",
+        content:
+          "# Current Providence Portland New-Grad Roles\nNo matching openings are currently listed.",
         allowed_mentions: { parse: [] },
       },
     ];
@@ -61,7 +62,7 @@ export function buildDailyDigestPayloads(jobs) {
     const first = index === 0;
     payloads.push({
       content: first
-        ? `# Current Providence New-Grad Roles\n**${jobs.length} current ${jobs.length === 1 ? "opening" : "openings"}**`
+        ? `# Current Providence Portland New-Grad Roles\n**${jobs.length} current ${jobs.length === 1 ? "opening" : "openings"}**`
         : "**Current roles continued**",
       embeds: jobs
         .slice(index, index + EMBEDS_PER_MESSAGE)

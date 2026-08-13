@@ -7,6 +7,7 @@ export const CAMPAIGN_URL =
   "https://providence.jobs/campaigns/rn-resident-graduate/jobs/";
 export const SEARCH_API =
   "https://prod-search-api.jobsyn.org/api/v1/solr/search";
+export const TARGET_LOCATION = "Portland, OR";
 
 const TITLE_PATTERN =
   /\b(?:graduate nurse|new grad(?:uate)?(?: rn| nurse)?|rn resident|nurse resident|rn residency|nurse residency)\b/i;
@@ -46,7 +47,13 @@ export function normalizeJobs(payloads) {
     const rawJobs = [...(payload.featured_jobs ?? []), ...(payload.jobs ?? [])];
     for (const raw of rawJobs) {
       const job = toJob(raw);
-      if (job && TITLE_PATTERN.test(job.title)) jobs.set(job.id, job);
+      if (
+        job &&
+        TITLE_PATTERN.test(job.title) &&
+        job.location.toLowerCase() === TARGET_LOCATION.toLowerCase()
+      ) {
+        jobs.set(job.id, job);
+      }
     }
   }
 
@@ -125,10 +132,10 @@ export function buildAlert(jobs) {
   });
 
   return [
-    `# ${jobs.length} new Providence new-grad nursing ${noun}`,
+    `# ${jobs.length} new Providence Portland new-grad nursing ${noun}`,
     "",
     ...sections.flatMap((section) => [section, ""]),
-    `Source: [Providence RN Resident & Graduate jobs](${CAMPAIGN_URL})`,
+    `Source: [Providence RN Resident & Graduate jobs](${CAMPAIGN_URL}) filtered to ${TARGET_LOCATION}`,
     "",
     `_Checked ${new Date().toISOString()}_`,
   ].join("\n");
