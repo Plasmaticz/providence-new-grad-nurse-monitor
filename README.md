@@ -9,9 +9,9 @@
 
 | Position | Location | Posted | Requisition |
 | --- | --- | --- | --- |
+| [RN Resident - Medical Surgical](https://providence.jobs/spokane-wa/rn-resident-medical-surgical/9F65CBA643654F3381880A39C4E97B3B/job/) | Spokane, WA | 2026-08-13 | 452181 |
 | [RN Resident - Resource Team Float Pool](https://providence.jobs/richland-wa/rn-resident-resource-team-float-pool/A6E14461CD1C48D9BFA85A27EE9AB4D1/job/) | Richland, WA | 2026-08-11 | 451984 |
 | [RN Resident - Emergency Services](https://providence.jobs/newberg-or/rn-resident-emergency-services/8E013F00DEF54FDCBEE0026929F94816/job/) | Newberg, OR | 2026-08-11 | 451170 |
-| [RN Resident - Oncology](https://providence.jobs/spokane-wa/rn-resident-oncology/18D75AD578BB4D01AD537FD344982B99/job/) | Spokane, WA | 2026-08-11 | 446900 |
 | [RN, RN Fellow, and RN Resident - Multispecialty *Hiring Event, August 13, Spokane*](https://providence.jobs/spokane-wa/rn-rn-fellow-and-rn-resident-multispecialty-hiring-event-august-13-spokane/F6BB5A54FDF643BDA51FED20BEE74D15/job/) | Spokane, WA | 2026-07-30 | 448826 |
 | [RN Resident Med Surg](https://providence.jobs/walla-walla-wa/rn-resident-med-surg/A63006E0232647B196338B1A5375D479/job/) | Walla Walla, WA | 2026-06-29 | 441084 |
 | [RN Resident - New Grad](https://providence.jobs/seattle-wa/rn-resident-new-grad/2844F4B5DFDB44A99DC63204571B82DB/job/) | Seattle, WA | 2026-06-29 | 438575 |
