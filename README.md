@@ -5,11 +5,11 @@
 ## Current Portland openings
 
 <!-- PROVIDENCE-JOBS:START -->
-**0 current openings**
+**1 current opening**
 
 | Position | Location | Posted | Requisition |
 | --- | --- | --- | --- |
-| No matching openings are currently listed. |  |  |  |
+| [RN Resident - Medical Oncology](https://providence.jobs/portland-or/rn-resident-medical-oncology/FD4A3D52CA794AF5854C45AB98C5A124/job/) | Portland, OR | 2026-09-14 | 457486 |
 
 [View the full Providence campaign](https://providence.jobs/campaigns/rn-resident-graduate/jobs/)
 <!-- PROVIDENCE-JOBS:END -->
