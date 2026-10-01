@@ -5,11 +5,11 @@
 ## Current Portland openings
 
 <!-- PROVIDENCE-JOBS:START -->
-**1 current opening**
+**0 current openings**
 
 | Position | Location | Posted | Requisition |
 | --- | --- | --- | --- |
-| [RN Resident - Labor and Delivery](https://providence.jobs/portland-or/rn-resident-labor-and-delivery/B5D544A54AB7478FBA53A0E5566F9338/job/) | Portland, OR | 2026-09-30 | 461882 |
+| No matching openings are currently listed. |  |  |  |
 
 [View the full Providence campaign](https://providence.jobs/campaigns/rn-resident-graduate/jobs/)
 <!-- PROVIDENCE-JOBS:END -->
