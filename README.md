@@ -5,11 +5,11 @@
 ## Current Portland openings
 
 <!-- PROVIDENCE-JOBS:START -->
-**0 current openings**
+**1 current opening**
 
 | Position | Location | Posted | Requisition |
 | --- | --- | --- | --- |
-| No matching openings are currently listed. |  |  |  |
+| [RN Resident - Medical Surgical](https://providence.jobs/portland-or/rn-resident-medical-surgical/B7A04635C93B41C49C9A95FC85B50AB7/job/) | Portland, OR | 2026-10-22 | 466224 |
 
 [View the full Providence campaign](https://providence.jobs/campaigns/rn-resident-graduate/jobs/)
 <!-- PROVIDENCE-JOBS:END -->
