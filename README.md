@@ -5,11 +5,11 @@
 ## Current Portland openings
 
 <!-- PROVIDENCE-JOBS:START -->
-**1 current opening**
+**0 current openings**
 
 | Position | Location | Posted | Requisition |
 | --- | --- | --- | --- |
-| [RN Resident - Orthopedics](https://providence.jobs/portland-or/rn-resident-orthopedics/68BBF540BF7C4C89AFA5D503F56BED75/job/) | Portland, OR | 2026-10-30 | 468590 |
+| No matching openings are currently listed. |  |  |  |
 
 [View the full Providence campaign](https://providence.jobs/campaigns/rn-resident-graduate/jobs/)
 <!-- PROVIDENCE-JOBS:END -->
